@@ -3488,7 +3488,7 @@ function createTextVNode(val) {
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
 function cloneVNode(vnode) {
-    const cloned = new VNode(vnode.tag, vnode.data, 
+    const cloned = new VNode(vnode.tag, vnode.data,
     // #7975
     // clone children array to avoid mutating original in case of cloning
     // a child.
@@ -4415,7 +4415,7 @@ function bindObjectListeners(data, value) {
     return data;
 }
 
-function resolveScopedSlots(fns, res, 
+function resolveScopedSlots(fns, res,
 // the following are added in 2.6
 hasDynamicKeys, contentHashKey) {
     res = res || { $stable: !hasDynamicKeys };
@@ -5285,14 +5285,14 @@ function createComponent(Ctor, data, context, children, tag) {
     const name = getComponentName(Ctor.options) || tag;
     const vnode = new VNode(
     // @ts-expect-error
-    `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`, data, undefined, undefined, undefined, context, 
+    `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`, data, undefined, undefined, undefined, context,
     // @ts-expect-error
     { Ctor, propsData, listeners, tag, children }, asyncFactory);
     return vnode;
 }
 function createComponentInstanceForVnode(
 // we know it's MountedComponentVNode but flow doesn't
-vnode, 
+vnode,
 // activeInstance in lifecycle state
 parent) {
     const options = {
@@ -11667,7 +11667,7 @@ var consolidate$1 = {exports: {}};
 
 	/**
 	 * Twing string support.
-	 */ 
+	 */
 
 	exports.twing.render = function(str, options, cb) {
 	  return promisify(cb, function(cb) {
@@ -12731,7 +12731,7 @@ function createCompilerCreator(baseCompile) {
             }
             finalOptions.warn = warn;
             const compiled = baseCompile(template.trim(), finalOptions);
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV !== 'production' && finalOptions.shouldDetectErrors) {
                 detectErrors(compiled.ast, warn);
             }
             compiled.errors = errors;
@@ -13290,6 +13290,7 @@ function actuallyCompile(options) {
             filename: options.filename
         });
     }
+    finalCompilerOptions.shouldDetectErrors = !isTS;
     finalCompilerOptions.bindings = bindings;
     const { ast, render, staticRenderFns, tips, errors } = compile(source, finalCompilerOptions);
     if (errors && errors.length) {
@@ -13381,8 +13382,8 @@ var unesc = {exports: {}};
 	// https://mathiasbynens.be/notes/css-escapes
 
 	/**
-	 * 
-	 * @param {string} str 
+	 *
+	 * @param {string} str
 	 * @returns {[string, number]|undefined}
 	 */
 	function gobbleHex(str) {
@@ -13873,7 +13874,7 @@ types.UNIVERSAL = UNIVERSAL;
 	   * Return the most specific node at the line and column number given.
 	   * The source location is based on the original parsed location, locations aren't
 	   * updated as selector nodes are mutated.
-	   * 
+	   *
 	   * Note that this location is relative to the location of the first character
 	   * of the selector, and not the location of the selector in the overall document
 	   * when used in conjunction with postcss.

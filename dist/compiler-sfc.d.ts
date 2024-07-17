@@ -227,6 +227,7 @@ export declare type CompilerOptions = {
     comments?: boolean;
     scopeId?: string;
     bindings?: BindingMetadata;
+    shouldDetectErrors?: boolean;
 };
 
 /**
