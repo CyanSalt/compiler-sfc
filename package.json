@@ -1,6 +1,6 @@
 {
   "name": "@legacy-vue/compiler-sfc",
-  "version": "2.7.16-rc.0",
+  "version": "2.7.16-rc.1",
   "publishConfig": {
     "access": "public"
   },
