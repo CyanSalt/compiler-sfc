@@ -1,0 +1,25 @@
+{
+  "name": "@legacy-vue/compiler-sfc",
+  "version": "2.7.16",
+  "description": "compiler-sfc for Vue 2",
+  "main": "dist/compiler-sfc.js",
+  "types": "dist/compiler-sfc.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "release": "release-it"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.23.5",
+    "postcss": "^8.4.14",
+    "source-map": "^0.6.1"
+  },
+  "optionalDependencies": {
+    "prettier": "^1.18.2 || ^2.0.0"
+  },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "^8.0.1",
+    "release-it": "^17.6.0"
+  }
+}
