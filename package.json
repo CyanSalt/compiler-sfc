@@ -1,6 +1,9 @@
 {
   "name": "@legacy-vue/compiler-sfc",
-  "version": "2.7.16",
+  "version": "2.7.16-rc.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "compiler-sfc for Vue 2",
   "main": "dist/compiler-sfc.js",
   "types": "dist/compiler-sfc.d.ts",
@@ -8,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "release": "release-it"
+    "release": "release-it --preRelease=rc --npm.tag=latest"
   },
   "dependencies": {
     "@babel/parser": "^7.23.5",
