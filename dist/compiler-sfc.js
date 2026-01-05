@@ -13290,7 +13290,9 @@ function actuallyCompile(options) {
             filename: options.filename
         });
     }
-    finalCompilerOptions.shouldDetectErrors = !isTS;
+    if (isUndef(finalCompilerOptions.shouldDetectErrors)) {
+        finalCompilerOptions.shouldDetectErrors = !isTS;
+    }
     finalCompilerOptions.bindings = bindings;
     const { ast, render, staticRenderFns, tips, errors } = compile(source, finalCompilerOptions);
     if (errors && errors.length) {
