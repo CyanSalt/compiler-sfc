@@ -228,6 +228,7 @@ export declare type CompilerOptions = {
     scopeId?: string;
     bindings?: BindingMetadata;
     shouldDetectErrors?: boolean;
+    ignoreUpdateEventNameCasing?: boolean;
 };
 
 /**

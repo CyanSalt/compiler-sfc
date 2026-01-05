@@ -7325,7 +7325,7 @@ function processElement(element, options) {
     for (let i = 0; i < transforms.length; i++) {
         element = transforms[i](element, options) || element;
     }
-    processAttrs(element);
+    processAttrs(element, options);
     return element;
 }
 function processKey(el) {
@@ -7577,7 +7577,7 @@ function processComponent(el) {
         el.inlineTemplate = true;
     }
 }
-function processAttrs(el) {
+function processAttrs(el, options) {
     const list = el.attrsList;
     let i, l, name, rawName, value, modifiers, syncGen, isDynamic;
     for (i = 0, l = list.length; i < l; i++) {
@@ -7643,6 +7643,17 @@ function processAttrs(el) {
                     name = name.slice(1, -1);
                 }
                 addHandler(el, name, value, modifiers, false, warn$2, list[i], isDynamic);
+                if (options.ignoreUpdateEventNameCasing) {
+                    if (!isDynamic && !modifiers && name.indexOf('update:') === 0) {
+                        const baseName = name.slice(7);
+                        if (baseName !== camelize(baseName)) {
+                            addHandler(el, `update:${camelize(baseName)}`, value, modifiers, false, warn$2, list[i], isDynamic);
+                        }
+                        if (baseName !== hyphenate(baseName)) {
+                            addHandler(el, `update:${hyphenate(baseName)}`, value, modifiers, false, warn$2, list[i], isDynamic);
+                        }
+                    }
+                }
             }
             else {
                 // normal directives
@@ -13292,6 +13303,9 @@ function actuallyCompile(options) {
     }
     if (isUndef(finalCompilerOptions.shouldDetectErrors)) {
         finalCompilerOptions.shouldDetectErrors = !isTS;
+    }
+    if (isUndef(finalCompilerOptions.ignoreUpdateEventNameCasing)) {
+        finalCompilerOptions.ignoreUpdateEventNameCasing = true;
     }
     finalCompilerOptions.bindings = bindings;
     const { ast, render, staticRenderFns, tips, errors } = compile(source, finalCompilerOptions);

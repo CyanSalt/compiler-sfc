@@ -33,3 +33,44 @@ describe('shouldDetectErrors', () => {
   })
 
 })
+
+describe('ignoreUpdateEventNameCasing', () => {
+
+  it('should transform update event from camel case to hyphen case', () => {
+    const result = compileTemplate({
+      filename: 'example.vue',
+      source: `<input @update:modelValue="handleUpdate">`,
+    })
+    expect(result.code).toMatch(`{
+    on: {
+      "update:modelValue": _vm.handleUpdate,
+      "update:model-value": _vm.handleUpdate,
+    },
+  }`)
+  })
+
+  it('should transform update event from hyphen case to camel case', () => {
+    const result = compileTemplate({
+      filename: 'example.vue',
+      source: `<input @update:model-value="handleUpdate">`,
+    })
+    expect(result.code).toMatch(`{
+    on: {
+      "update:model-value": _vm.handleUpdate,
+      "update:modelValue": _vm.handleUpdate,
+    },
+  }`)
+  })
+
+  it('should be controlled by compiler options', () => {
+    const result = compileTemplate({
+      filename: 'example.vue',
+      source: `<input @update:modelValue="handleUpdate">`,
+      compilerOptions: {
+        ignoreUpdateEventNameCasing: false,
+      },
+    })
+    expect(result.code).toMatch(`{ on: { "update:modelValue": _vm.handleUpdate } }`)
+  })
+
+})
