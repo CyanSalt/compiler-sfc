@@ -26,7 +26,7 @@ describe('Single File Component parser', () => {
       <div>
         <style>nested should be ignored</style>
       </div>
-    `
+    `,
     )
     expect(res.template!.content.trim()).toBe('<div>hi</div>')
     expect(res.styles.length).toBe(4)
@@ -34,7 +34,7 @@ describe('Single File Component parser', () => {
     expect(res.styles[1].lang).toBe('stylus')
     expect(res.styles[1].scoped).toBe(true)
     expect(res.styles[1].content.trim()).toBe(
-      'h1\n  color red\nh2\n  color green'
+      'h1\n  color red\nh2\n  color green',
     )
     expect(res.styles[2].module).toBe(true)
     expect(res.styles[3].attrs['bool-attr']).toBe(true)
@@ -59,7 +59,7 @@ describe('Single File Component parser', () => {
       </template>
     `)
     expect(res.template!.content.trim()).toBe(
-      '<div><template v-if="ok">hi</template></div>'
+      '<div><template v-if="ok">hi</template></div>',
     )
   })
 
@@ -76,33 +76,33 @@ describe('Single File Component parser', () => {
       </style>
     `
     const deindentDefault = parseComponent(content.trim(), {
-      pad: false
+      pad: false,
     })
     const deindentEnabled = parseComponent(content.trim(), {
       pad: false,
-      deindent: true
+      deindent: true,
     })
     const deindentDisabled = parseComponent(content.trim(), {
       pad: false,
-      deindent: false
+      deindent: false,
     })
 
     expect(deindentDefault.template!.content).toBe('\n<div></div>\n')
     expect(deindentDefault.script!.content).toBe(
-      '\n        export default {}\n      '
+      '\n        export default {}\n      ',
     )
     expect(deindentDefault.styles[0].content).toBe('\nh1 { color: red }\n')
     expect(deindentEnabled.template!.content).toBe('\n<div></div>\n')
     expect(deindentEnabled.script!.content).toBe('\nexport default {}\n')
     expect(deindentEnabled.styles[0].content).toBe('\nh1 { color: red }\n')
     expect(deindentDisabled.template!.content).toBe(
-      '\n        <div></div>\n      '
+      '\n        <div></div>\n      ',
     )
     expect(deindentDisabled.script!.content).toBe(
-      '\n        export default {}\n      '
+      '\n        export default {}\n      ',
     )
     expect(deindentDisabled.styles[0].content).toBe(
-      '\n        h1 { color: red }\n      '
+      '\n        h1 { color: red }\n      ',
     )
   })
 
@@ -120,34 +120,34 @@ describe('Single File Component parser', () => {
 `
     const padDefault = parseComponent(content.trim(), {
       pad: true,
-      deindent: true
+      deindent: true,
     })
     const padLine = parseComponent(content.trim(), {
       pad: 'line',
-      deindent: true
+      deindent: true,
     })
     const padSpace = parseComponent(content.trim(), {
       pad: 'space',
-      deindent: true
+      deindent: true,
     })
 
     expect(padDefault.script!.content).toBe(
-      Array(3 + 1).join('//\n') + '\nexport default {}\n'
+      Array(3 + 1).join('//\n') + '\nexport default {}\n',
     )
     expect(padDefault.styles[0].content).toBe(
-      Array(6 + 1).join('\n') + '\nh1 { color: red }\n'
+      Array(6 + 1).join('\n') + '\nh1 { color: red }\n',
     )
     expect(padLine.script!.content).toBe(
-      Array(3 + 1).join('//\n') + '\nexport default {}\n'
+      Array(3 + 1).join('//\n') + '\nexport default {}\n',
     )
     expect(padLine.styles[0].content).toBe(
-      Array(6 + 1).join('\n') + '\nh1 { color: red }\n'
+      Array(6 + 1).join('\n') + '\nh1 { color: red }\n',
     )
     expect(padSpace.script!.content).toBe(
       `<template>
         <div></div>
       </template>
-      <script>`.replace(/./g, ' ') + '\nexport default {}\n'
+      <script>`.replace(/./g, ' ') + '\nexport default {}\n',
     )
     expect(padSpace.styles[0].content).toBe(
       `<template>
@@ -156,7 +156,7 @@ describe('Single File Component parser', () => {
       <script>
         export default {}
       </script>
-      <style>`.replace(/./g, ' ') + '\nh1 { color: red }\n'
+      <style>`.replace(/./g, ' ') + '\nh1 { color: red }\n',
     )
   })
 
@@ -168,7 +168,7 @@ describe('Single File Component parser', () => {
           h1(v-if='1 < 2') hello
       </template>
     `,
-      { deindent: true }
+      { deindent: true },
     )
     expect(res.template!.content.trim()).toBe(`div\n  h1(v-if='1 < 2') hello`)
   })
@@ -204,21 +204,21 @@ describe('Single File Component parser', () => {
       }
       </test>
       <custom src="./x.json"></custom>
-    `
+    `,
     )
     expect(res.customBlocks.length).toBe(4)
 
     const simpleExample = res.customBlocks[0]
     expect(simpleExample.type).toBe('example')
     expect(simpleExample.content.trim()).toBe(
-      '<my-button ref="button">Hello</my-button>'
+      '<my-button ref="button">Hello</my-button>',
     )
     expect(simpleExample.attrs.name).toBe('simple')
 
     const withProps = res.customBlocks[1]
     expect(withProps.type).toBe('example')
     expect(withProps.content.trim()).toBe(
-      '<my-button color="red">Hello</my-button>'
+      '<my-button color="red">Hello</my-button>',
     )
     expect(withProps.attrs.name).toBe('with props')
 

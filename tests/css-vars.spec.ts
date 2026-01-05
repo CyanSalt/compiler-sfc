@@ -1,15 +1,15 @@
 import { describe, expect, test } from 'vitest'
 import { compileStyle, parse } from '../dist/compiler-sfc'
-import { mockId, compile, assertCode } from './utils'
+import { assertCode, compile, mockId } from './utils'
 
 describe('CSS vars injection', () => {
   test('generating correct code for nested paths', () => {
     const { content } = compile(
-      `<script>const a = 1</script>\n` +
-        `<style>div{
+      `<script>const a = 1</script>\n`
+        + `<style>div{
           color: v-bind(color);
           font-size: v-bind('font.size');
-        }</style>`
+        }</style>`,
     )
     expect(content).toMatch(`_useCssVars((_vm, _setup) => ({
   "${mockId}-color": (_vm.color),
@@ -28,12 +28,12 @@ describe('CSS vars injection', () => {
           }
         }
       }
-      </script>\n` +
-        `<style>
+      </script>\n`
+        + `<style>
           div {
             font-size: v-bind(size);
           }
-        </style>`
+        </style>`,
     )
     expect(content).toMatch(`_useCssVars((_vm, _setup) => ({
   "${mockId}-size": (_vm.size)
@@ -51,14 +51,14 @@ describe('CSS vars injection', () => {
         defineProps({
           foo: String
         })
-        </script>\n` +
-        `<style>
+        </script>\n`
+        + `<style>
           div {
             color: v-bind(color);
             font-size: v-bind(size);
             border: v-bind(foo);
           }
-        </style>`
+        </style>`,
     )
     // should handle:
     // 1. local const bindings
@@ -80,7 +80,7 @@ describe('CSS vars injection', () => {
         font-size: v-bind('font.size');
       }`,
       filename: 'test.css',
-      id: 'data-v-test'
+      id: 'data-v-test',
     })
     expect(code).toMatchInlineSnapshot(`
       ".foo[data-v-test] {
@@ -92,12 +92,12 @@ describe('CSS vars injection', () => {
 
   test('prod mode', () => {
     const { content } = compile(
-      `<script>const a = 1</script>\n` +
-        `<style>div{
+      `<script>const a = 1</script>\n`
+        + `<style>div{
           color: v-bind(color);
           font-size: v-bind('font.size');
         }</style>`,
-      { isProd: true }
+      { isProd: true },
     )
     expect(content).toMatch(`_useCssVars((_vm, _setup) => ({
   "4003f1a6": (_vm.color),
@@ -111,7 +111,7 @@ describe('CSS vars injection', () => {
       }`,
       filename: 'test.css',
       id: mockId,
-      isProd: true
+      isProd: true,
     })
     expect(code).toMatchInlineSnapshot(`
       ".foo[xxxxxxxx] {
@@ -125,18 +125,18 @@ describe('CSS vars injection', () => {
     test('<script> w/ no default export', () => {
       assertCode(
         compile(
-          `<script>const a = 1</script>\n` +
-            `<style>div{ color: v-bind(color); }</style>`
-        ).content
+          `<script>const a = 1</script>\n`
+            + `<style>div{ color: v-bind(color); }</style>`,
+        ).content,
       )
     })
 
     test('<script> w/ default export', () => {
       assertCode(
         compile(
-          `<script>export default { setup() {} }</script>\n` +
-            `<style>div{ color: v-bind(color); }</style>`
-        ).content
+          `<script>export default { setup() {} }</script>\n`
+            + `<style>div{ color: v-bind(color); }</style>`,
+        ).content,
       )
     })
 
@@ -146,30 +146,30 @@ describe('CSS vars injection', () => {
           `<script>
           // export default {}
           export default {}
-        </script>\n` + `<style>div{ color: v-bind(color); }</style>`
-        ).content
+        </script>\n<style>div{ color: v-bind(color); }</style>`,
+        ).content,
       )
     })
 
     test('w/ <script setup>', () => {
       assertCode(
         compile(
-          `<script setup>const color = 'red'</script>\n` +
-            `<style>div{ color: v-bind(color); }</style>`
-        ).content
+          `<script setup>const color = 'red'</script>\n`
+            + `<style>div{ color: v-bind(color); }</style>`,
+        ).content,
       )
     })
 
-    //#4185
+    // #4185
     test('should ignore comments', () => {
       const { content } = compile(
-        `<script setup>const color = 'red';const width = 100</script>\n` +
-          `<style>
+        `<script setup>const color = 'red';const width = 100</script>\n`
+          + `<style>
             /* comment **/
             div{ /* color: v-bind(color); */ width:20; }
             div{ width: v-bind(width); }
             /* comment */
-          </style>`
+          </style>`,
       )
 
       expect(content).not.toMatch(`"${mockId}-color": (_setup.color)`)
@@ -181,15 +181,15 @@ describe('CSS vars injection', () => {
       const { content } = compile(
         `<script setup>
         const color = 'red'
-        </script>\n` +
-          `<style>
+        </script>\n`
+          + `<style>
           div {
             color: v-bind(color);
           }
           p {
             color: v-bind(color);
           }
-        </style>`
+        </style>`,
       )
       // color should only be injected once, even if it is twice in style
       expect(content).toMatch(`_useCssVars((_vm, _setup) => ({
@@ -204,8 +204,8 @@ describe('CSS vars injection', () => {
         let a = 100
         let b = 200
         let foo = 300
-        </script>\n` +
-          `<style>
+        </script>\n`
+          + `<style>
           p{
             width: calc(v-bind(foo) - 3px);
             height: calc(v-bind('foo') - 3px);
@@ -220,7 +220,7 @@ describe('CSS vars injection', () => {
           p {
             color: v-bind(((a + b)) / (2 * a));
           }
-        </style>`
+        </style>`,
       )
       expect(content).toMatch(`_useCssVars((_vm, _setup) => ({
   "${mockId}-foo": (_setup.foo),
@@ -240,7 +240,7 @@ describe('CSS vars injection', () => {
           font-weight: v-bind("count.toString(");
           font-weight: v-bind(xxx);
         }
-        </style>`
+        </style>`,
       })
       expect(cssVars).toMatchObject([`count.toString(`, `xxx`])
     })

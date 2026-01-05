@@ -1,20 +1,21 @@
 import { expect, test } from 'vitest'
-import { compileTemplate, parse } from '../dist/compiler-sfc'
 import Vue from 'vue'
+import { compileTemplate, parse } from '../dist/compiler-sfc'
 
 function mockRender(code: string, mocks: Record<string, any> = {}) {
+  // eslint-disable-next-line no-new-func
   const fn = new Function(
     `require`,
-    `${code}; return { render, staticRenderFns }`
+    `${code}; return { render, staticRenderFns }`,
   )
   const vm = new Vue(
-    Object.assign(
-      {},
-      fn((id: string) => mocks[id])
-    )
+    {
+
+      ...fn((id: string) => mocks[id]),
+    },
   )
   vm.$mount()
-  return (vm as any)._vnode
+  return vm['_vnode']
 }
 
 test('should work', () => {
@@ -22,7 +23,7 @@ test('should work', () => {
 
   const result = compileTemplate({
     filename: 'example.vue',
-    source
+    source,
   })
 
   expect(result.errors.length).toBe(0)
@@ -40,20 +41,20 @@ test('should work', () => {
 test('preprocess pug', () => {
   const template = parse({
     source:
-      '<template lang="pug">\n' +
-      'body\n' +
-      ' h1 Pug Examples\n' +
-      ' div.container\n' +
-      '   p Cool Pug example!\n' +
-      '</template>\n',
+      '<template lang="pug">\n'
+      + 'body\n'
+      + ' h1 Pug Examples\n'
+      + ' div.container\n'
+      + '   p Cool Pug example!\n'
+      + '</template>\n',
     filename: 'example.vue',
-    sourceMap: true
+    sourceMap: true,
   }).template!
 
   const result = compileTemplate({
     filename: 'example.vue',
     source: template.content,
-    preprocessLang: template.lang
+    preprocessLang: template.lang,
   })
 
   expect(result.errors.length).toBe(0)
@@ -68,14 +69,14 @@ test('supports uri fragment in transformed require', () => {
   </svg>' //
   const result = compileTemplate({
     filename: 'svgparticle.html',
-    source: source,
+    source,
     transformAssetUrls: {
-      use: 'href'
-    }
+      use: 'href',
+    },
   })
   expect(result.errors.length).toBe(0)
   expect(result.code).toMatch(
-    /href: require\("@svg\/file.svg"\) \+ "#fragment"/
+    /href: require\("@svg\/file.svg"\) \+ "#fragment"/,
   )
 })
 
@@ -88,10 +89,10 @@ test('when too short uri then empty require', () => {
   </svg>' //
   const result = compileTemplate({
     filename: 'svgparticle.html',
-    source: source,
+    source,
     transformAssetUrls: {
-      use: 'href'
-    }
+      use: 'href',
+    },
   })
   expect(result.errors.length).toBe(0)
   expect(result.code).toMatch(/href: require\(""\)/)
@@ -99,16 +100,16 @@ test('when too short uri then empty require', () => {
 
 test('warn missing preprocessor', () => {
   const template = parse({
-    source: '<template lang="unknownLang">\n' + '</template>\n',
+    source: '<template lang="unknownLang">\n</template>\n',
 
     filename: 'example.vue',
-    sourceMap: true
+    sourceMap: true,
   }).template!
 
   const result = compileTemplate({
     filename: 'example.vue',
     source: template.content,
-    preprocessLang: template.lang
+    preprocessLang: template.lang,
   })
 
   expect(result.errors.length).toBe(1)
@@ -125,13 +126,13 @@ test('transform assetUrls', () => {
   const result = compileTemplate({
     filename: 'example.vue',
     source,
-    transformAssetUrls: true
+    transformAssetUrls: true,
   })
   expect(result.errors.length).toBe(0)
 
   const vnode = mockRender(result.code, {
     './logo.png': 'a',
-    'fixtures/logo.png': 'b'
+    'fixtures/logo.png': 'b',
   })
 
   expect(vnode.children[0].data.attrs.src).toBe('a')
@@ -167,23 +168,23 @@ test('transform srcset', () => {
   const result = compileTemplate({
     filename: 'example.vue',
     source,
-    transformAssetUrls: true
+    transformAssetUrls: true,
   })
   expect(result.errors.length).toBe(0)
 
   const vnode = mockRender(result.code, {
-    './logo.png': 'test-url'
+    './logo.png': 'test-url',
   })
 
   // img tag
   expect(vnode.children[0].data.attrs.src).toBe('test-url')
   // image tag (SVG)
   expect(vnode.children[2].children[0].data.attrs['xlink:href']).toBe(
-    'test-url'
+    'test-url',
   )
   // use tag (SVG)
   expect(vnode.children[4].children[0].data.attrs['xlink:href']).toBe(
-    'test-url'
+    'test-url',
   )
 
   // image tag with srcset
@@ -194,7 +195,7 @@ test('transform srcset', () => {
   expect(vnode.children[12].data.attrs.srcset).toBe('test-url 2x, test-url')
   expect(vnode.children[14].data.attrs.srcset).toBe('test-url 2x, test-url 3x')
   expect(vnode.children[16].data.attrs.srcset).toBe(
-    'test-url, test-url 2x, test-url 3x'
+    'test-url, test-url 2x, test-url 3x',
   )
   expect(vnode.children[18].data.attrs.srcset).toBe('test-url 2x, test-url 3x')
 })
@@ -213,19 +214,19 @@ test('transform assetUrls and srcset with base option', () => {
     filename: 'example.vue',
     source,
     transformAssetUrls: true,
-    transformAssetUrlsOptions: { base: '/base/' }
+    transformAssetUrlsOptions: { base: '/base/' },
   })
 
   expect(result.errors.length).toBe(0)
 
   const vnode = mockRender(result.code, {
-    '@/fixtures/logo.png': 'aliased'
+    '@/fixtures/logo.png': 'aliased',
   })
   expect(vnode.children[0].data.attrs.src).toBe('/base/logo.png')
   expect(vnode.children[2].data.attrs.src).toBe('/base/fixtures/logo.png')
   expect(vnode.children[4].data.attrs.src).toBe('/base/fixtures/logo.png')
   expect(vnode.children[6].data.attrs.srcset).toBe(
-    '/base/logo.png 2x, /base/logo.png 3x'
+    '/base/logo.png 2x, /base/logo.png 3x',
   )
   expect(vnode.children[8].data.attrs.src).toBe('aliased')
 })
@@ -242,14 +243,14 @@ test('transform with includeAbsolute', () => {
     filename: 'example.vue',
     source,
     transformAssetUrls: true,
-    transformAssetUrlsOptions: { includeAbsolute: true }
+    transformAssetUrlsOptions: { includeAbsolute: true },
   })
 
   expect(result.errors.length).toBe(0)
 
   const vnode = mockRender(result.code, {
     './logo.png': 'relative',
-    '/logo.png': 'absolute'
+    '/logo.png': 'absolute',
   })
   expect(vnode.children[0].data.attrs.src).toBe('relative')
   expect(vnode.children[2].data.attrs.src).toBe('absolute')

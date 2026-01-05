@@ -7,12 +7,12 @@ const require = createRequire(import.meta.url)
 test('preprocess less', () => {
   const style = parse({
     source:
-      '<style lang="less">\n' +
-      '@red: rgb(255, 0, 0);\n' +
-      '.color { color: @red; }\n' +
-      '</style>\n',
+      '<style lang="less">\n'
+      + '@red: rgb(255, 0, 0);\n'
+      + '.color { color: @red; }\n'
+      + '</style>\n',
     filename: 'example.vue',
-    sourceMap: true
+    sourceMap: true,
   }).styles[0]
 
   const result = compileStyle({
@@ -21,7 +21,7 @@ test('preprocess less', () => {
     source: style.content,
     map: style.map,
     scoped: false,
-    preprocessLang: style.lang
+    preprocessLang: style.lang,
   })
 
   expect(result.errors.length).toBe(0)
@@ -32,12 +32,12 @@ test('preprocess less', () => {
 test('preprocess scss', () => {
   const style = parse({
     source:
-      '<style lang="scss">\n' +
-      '$red: red;\n' +
-      '.color { color: $red; }\n' +
-      '</style>\n',
+      '<style lang="scss">\n'
+      + '$red: red;\n'
+      + '.color { color: $red; }\n'
+      + '</style>\n',
     filename: 'example.vue',
-    sourceMap: true
+    sourceMap: true,
   }).styles[0]
   const result = compileStyle({
     id: 'v-scope-xxx',
@@ -45,7 +45,7 @@ test('preprocess scss', () => {
     source: style.content,
     map: style.map,
     scoped: false,
-    preprocessLang: style.lang
+    preprocessLang: style.lang,
   })
 
   expect(result.errors.length).toBe(0)
@@ -56,13 +56,13 @@ test('preprocess scss', () => {
 test('preprocess sass', () => {
   const style = parse({
     source:
-      '<style lang="sass">\n' +
-      '$red: red\n' +
-      '.color\n' +
-      '   color: $red\n' +
-      '</style>\n',
+      '<style lang="sass">\n'
+      + '$red: red\n'
+      + '.color\n'
+      + '   color: $red\n'
+      + '</style>\n',
     filename: 'example.vue',
-    sourceMap: true
+    sourceMap: true,
   }).styles[0]
   const result = compileStyle({
     id: 'v-scope-xxx',
@@ -70,7 +70,7 @@ test('preprocess sass', () => {
     source: style.content,
     map: style.map,
     scoped: false,
-    preprocessLang: style.lang
+    preprocessLang: style.lang,
   })
 
   expect(result.errors.length).toBe(0)
@@ -81,13 +81,13 @@ test('preprocess sass', () => {
 test('preprocess stylus', () => {
   const style = parse({
     source:
-      '<style lang="styl">\n' +
-      'red-color = rgb(255, 0, 0);\n' +
-      '.color\n' +
-      '   color: red-color\n' +
-      '</style>\n',
+      '<style lang="styl">\n'
+      + 'red-color = rgb(255, 0, 0);\n'
+      + '.color\n'
+      + '   color: red-color\n'
+      + '</style>\n',
     filename: 'example.vue',
-    sourceMap: true
+    sourceMap: true,
   }).styles[0]
   const result = compileStyle({
     id: 'v-scope-xxx',
@@ -95,7 +95,7 @@ test('preprocess stylus', () => {
     source: style.content,
     map: style.map,
     scoped: false,
-    preprocessLang: style.lang
+    preprocessLang: style.lang,
   })
 
   expect(result.errors.length).toBe(0)
@@ -111,7 +111,7 @@ test('custom postcss plugin', () => {
     filename: 'example.vue',
     source: '.foo { color: red }',
     scoped: false,
-    postcssPlugins: [require('postcss').plugin('test-plugin', () => spy)()]
+    postcssPlugins: [require('postcss').plugin('test-plugin', () => spy)()],
   })
 
   expect(spy).toHaveBeenCalled()
@@ -123,10 +123,10 @@ test('custom postcss options', () => {
     filename: 'example.vue',
     source: '.foo { color: red }',
     scoped: false,
-    postcssOptions: { random: 'foo' }
+    postcssOptions: { random: 'foo' },
   })
 
-  expect((result.rawResult as any).opts.random).toBe('foo')
+  expect(result.rawResult!.opts['random']).toBe('foo')
 })
 
 test('async postcss plugin in sync mode', () => {
@@ -138,9 +138,9 @@ test('async postcss plugin in sync mode', () => {
     postcssPlugins: [
       require('postcss').plugin(
         'test-plugin',
-        () => async (result: any) => result
-      )
-    ]
+        () => async (opts: any) => opts,
+      ),
+    ],
   })
 
   expect(result.errors).toHaveLength(1)
@@ -155,9 +155,9 @@ test('async postcss plugin', async () => {
     postcssPlugins: [
       require('postcss').plugin(
         'test-plugin',
-        () => async (result: any) => result
-      )
-    ]
+        () => async (result: any) => result,
+      ),
+    ],
   })
 
   expect(promise instanceof Promise).toBe(true)
@@ -177,12 +177,12 @@ test('media query', () => {
   .foo {
     color: #000;
   }
-}`
+}`,
   })
 
   expect(result.errors).toHaveLength(0)
   expect(result.code).toContain(
-    '@media print {\n.foo[v-scope-xxx] {\n    color: #000;\n}\n}'
+    '@media print {\n.foo[v-scope-xxx] {\n    color: #000;\n}\n}',
   )
 })
 
@@ -196,11 +196,11 @@ test('supports query', () => {
   .foo {
     color: #000;
   }
-}`
+}`,
   })
 
   expect(result.errors).toHaveLength(0)
   expect(result.code).toContain(
-    '@supports ( color: #000 ) {\n.foo[v-scope-xxx] {\n    color: #000;\n}\n}'
+    '@supports ( color: #000 ) {\n.foo[v-scope-xxx] {\n    color: #000;\n}\n}',
   )
 })

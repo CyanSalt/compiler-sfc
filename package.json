@@ -11,6 +11,7 @@
     "dist"
   ],
   "scripts": {
+    "lint": "eslint --fix './**/*.{mjs,ts}'",
     "test": "vitest",
     "release": "release-it --preRelease=rc --npm.tag=latest"
   },
@@ -23,13 +24,17 @@
     "prettier": "^1.18.2 || ^2.0.0"
   },
   "devDependencies": {
+    "@cyansalt/eslint-config": "^4.5.0",
+    "@cyansalt/tsconfig": "^3.0.1",
     "@release-it/conventional-changelog": "^8.0.1",
     "@types/node": "^25.0.3",
+    "eslint": "^9.39.2",
     "less": "^4.5.1",
     "pug": "^3.0.3",
     "release-it": "^17.6.0",
     "sass": "^1.97.1",
     "stylus": "^0.64.0",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.16",
     "vue": "^2.7.16"
   }
