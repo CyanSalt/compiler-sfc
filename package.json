@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "lint": "eslint --fix './**/*.{mjs,ts}'",
+    "lint:ci": "eslint --max-warnings 0 './**/*.{mjs,ts}'",
     "test": "vitest",
     "release": "release-it --preRelease=rc --npm.tag=latest"
   },
