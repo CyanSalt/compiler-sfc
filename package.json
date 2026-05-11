@@ -15,6 +15,24 @@
     "test": "vitest",
     "release": "release-it --preRelease=rc --npm.tag=latest"
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.15.0",
+      "onFail": "error"
+    },
+    "packageManager": [
+      {
+        "name": "pnpm",
+        "version": "^11.0.0",
+        "onFail": "error"
+      },
+      {
+        "name": "npm",
+        "onFail": "ignore"
+      }
+    ]
+  },
   "dependencies": {
     "@babel/parser": "^7.23.5",
     "postcss": "^8.4.14",
